@@ -41,17 +41,17 @@ jobs:
             -o artifacts/Kaizentro-win-x64
           $metadata = @"
           Kaizentro Enterprise
-          Build: 001 Alpha
+          Build: 002 Alpha
           Package: Windows x64 self-contained publish
-          Notes: This is an early alpha desktop build. It contains the dashboard shell and sample VSM / Kaizen calculation engine.
+          Notes: Early alpha desktop build with dashboard shell, SAP-style CSV routing import, generated current-state VSM, takt/lead-time calculations, bottleneck detection, and basic Kaizen opportunity rules.
           "@
           Set-Content -Path artifacts/Kaizentro-win-x64/BUILD-INFO.txt -Value $metadata
-          Compress-Archive -Path artifacts/Kaizentro-win-x64/* -DestinationPath artifacts/Kaizentro-Build001-win-x64.zip -Force
+          Compress-Archive -Path artifacts/Kaizentro-win-x64/* -DestinationPath artifacts/Kaizentro-Build002-win-x64.zip -Force
 
       - name: Upload Downloadable Package
         uses: actions/upload-artifact@v4
         with:
-          name: Kaizentro-Build001-win-x64
-          path: artifacts/Kaizentro-Build001-win-x64.zip
+          name: Kaizentro-Build002-win-x64
+          path: artifacts/Kaizentro-Build002-win-x64.zip
           if-no-files-found: error
           retention-days: 30
