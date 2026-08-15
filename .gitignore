@@ -1,0 +1,29 @@
+# Build outputs
+bin/
+obj/
+.vs/
+TestResults/
+*.user
+*.suo
+*.cache
+*.log
+
+# Rider / JetBrains
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+# Packages
+packages/
+*.nupkg
+
+# Local database files
+*.db
+*.db-shm
+*.db-wal
+*.mdf
+*.ldf
+
+# Installer outputs
+installer/output/

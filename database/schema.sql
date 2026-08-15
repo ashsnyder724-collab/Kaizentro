@@ -1,0 +1,86 @@
+CREATE TABLE Plants (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    Name NVARCHAR(200) NOT NULL,
+    Location NVARCHAR(200) NOT NULL,
+    TimeZone NVARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Departments (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    PlantId UNIQUEIDENTIFIER NOT NULL,
+    Name NVARCHAR(200) NOT NULL,
+    Manager NVARCHAR(200) NULL,
+    CONSTRAINT FK_Departments_Plants FOREIGN KEY (PlantId) REFERENCES Plants(Id)
+);
+
+CREATE TABLE WorkCenters (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    DepartmentId UNIQUEIDENTIFIER NOT NULL,
+    Code NVARCHAR(50) NOT NULL,
+    Name NVARCHAR(200) NOT NULL,
+    AvailableMinutesPerShift DECIMAL(18,2) NOT NULL,
+    EfficiencyPercent DECIMAL(18,2) NOT NULL,
+    CONSTRAINT FK_WorkCenters_Departments FOREIGN KEY (DepartmentId) REFERENCES Departments(Id)
+);
+
+CREATE TABLE Materials (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    PartNumber NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(300) NOT NULL,
+    ProductFamily NVARCHAR(100) NOT NULL
+);
+
+CREATE TABLE ProductionDemands (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    MaterialId UNIQUEIDENTIFIER NOT NULL,
+    DailyDemand INT NOT NULL,
+    AvailableProductionMinutesPerDay DECIMAL(18,2) NOT NULL,
+    EffectiveDate DATE NOT NULL DEFAULT CONVERT(date, SYSUTCDATETIME()),
+    CONSTRAINT FK_ProductionDemands_Materials FOREIGN KEY (MaterialId) REFERENCES Materials(Id)
+);
+
+CREATE TABLE RoutingOperations (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    Sequence INT NOT NULL,
+    MaterialId UNIQUEIDENTIFIER NOT NULL,
+    WorkCenterId UNIQUEIDENTIFIER NOT NULL,
+    OperationName NVARCHAR(200) NOT NULL,
+    CycleTimeSeconds DECIMAL(18,2) NOT NULL,
+    SetupTimeMinutes DECIMAL(18,2) NOT NULL,
+    QueueTimeMinutes DECIMAL(18,2) NOT NULL,
+    MoveTimeMinutes DECIMAL(18,2) NOT NULL,
+    Operators INT NOT NULL,
+    YieldPercent DECIMAL(18,2) NOT NULL,
+    CONSTRAINT FK_RoutingOperations_Materials FOREIGN KEY (MaterialId) REFERENCES Materials(Id),
+    CONSTRAINT FK_RoutingOperations_WorkCenters FOREIGN KEY (WorkCenterId) REFERENCES WorkCenters(Id)
+);
+
+CREATE TABLE ImportBatches (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    SourceSystem NVARCHAR(100) NOT NULL,
+    FileName NVARCHAR(300) NOT NULL,
+    ImportedBy NVARCHAR(200) NULL,
+    ImportedAtUtc DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    Status NVARCHAR(50) NOT NULL
+);
+
+CREATE TABLE ImportValidationIssues (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    ImportBatchId UNIQUEIDENTIFIER NOT NULL,
+    RowNumber INT NOT NULL,
+    FieldName NVARCHAR(100) NOT NULL,
+    Message NVARCHAR(1000) NOT NULL,
+    CONSTRAINT FK_ImportValidationIssues_ImportBatches FOREIGN KEY (ImportBatchId) REFERENCES ImportBatches(Id)
+);
+
+CREATE TABLE KaizenOpportunities (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    Area NVARCHAR(100) NOT NULL,
+    WasteType NVARCHAR(100) NOT NULL,
+    ProblemStatement NVARCHAR(500) NOT NULL,
+    Recommendation NVARCHAR(1000) NOT NULL,
+    EstimatedAnnualSavings DECIMAL(18,2) NOT NULL,
+    PriorityScore INT NOT NULL,
+    Status NVARCHAR(50) NOT NULL DEFAULT 'Open',
+    CreatedAtUtc DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
+);
