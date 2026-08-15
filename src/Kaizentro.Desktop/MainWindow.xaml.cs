@@ -74,7 +74,7 @@ public partial class MainWindow : Window
                 ? $" Loaded with {import.Issues.Count} validation note(s). First: {import.Issues[0].Message}"
                 : " Loaded with no validation issues.";
 
-            LoadMap(map, $"Imported {Path.GetFileName(dialog.FileName)}.{issueText}");
+            LoadMap(map, $"Imported {System.IO.Path.GetFileName(dialog.FileName)}.{issueText}");
         }
         catch (Exception ex)
         {
