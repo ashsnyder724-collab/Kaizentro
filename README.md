@@ -19,7 +19,7 @@ Kaizentro is being built as a Windows-first manufacturing intelligence platform 
 
 ## Build 001 Scope
 
-This first foundation commit includes:
+This first foundation includes:
 
 - .NET solution structure
 - Windows WPF desktop shell
@@ -27,8 +27,21 @@ This first foundation commit includes:
 - Application service for takt, capacity, lead time, bottleneck, and Kaizen-rule calculations
 - SQL Server starter schema
 - Unit test project
-- GitHub Actions build workflow
-- Architecture and roadmap documentation
+- GitHub Actions build and packaging workflow
+- Architecture, roadmap, and installer documentation
+
+## Downloadable Package
+
+Build 001 produces a downloadable Windows package from GitHub Actions.
+
+1. Open the **Actions** tab in GitHub.
+2. Select **Kaizentro Build and Package**.
+3. Open the latest successful workflow run.
+4. Download the artifact named **Kaizentro-Build001-win-x64**.
+5. Extract the ZIP file on a Windows x64 machine.
+6. Run `Kaizentro.exe`.
+
+This is an early alpha package. It is not an MSI installer yet. The MSI/MSIX installer workstream is planned after the Excel import, database wiring, and generated VSM screen are stable.
 
 ## Repository Structure
 
@@ -48,6 +61,7 @@ database/
 docs/
   ARCHITECTURE.md
   ROADMAP.md
+  DOWNLOADS.md
 
 installer/
   README.md
@@ -58,6 +72,7 @@ installer/
 - Windows desktop application
 - .NET 8 / WPF foundation
 - SQL Server-ready data model
+- Self-contained Windows x64 ZIP artifact from GitHub Actions
 
 ## Status
 
