@@ -17,31 +17,19 @@ Kaizentro is being built as a Windows-first manufacturing intelligence platform 
 - Digital twin scenario analysis
 - Manufacturing executive dashboards
 
-## Build 001 Scope
+## Build 002 Scope
 
-This first foundation includes:
+Build 002 adds the first usable import-to-VSM workflow:
 
-- .NET solution structure
 - Windows WPF desktop shell
+- SAP-style CSV routing import
+- Import validation notes
+- Generated current-state VSM visual screen
 - Domain model for plants, departments, work centers, routings, VSM, and Kaizen opportunities
 - Application service for takt, capacity, lead time, bottleneck, and Kaizen-rule calculations
-- SQL Server starter schema
-- Unit test project
-- GitHub Actions build and packaging workflow
-- Architecture, roadmap, and installer documentation
-
-## Downloadable Package
-
-Build 001 produces a downloadable Windows package from GitHub Actions.
-
-1. Open the **Actions** tab in GitHub.
-2. Select **Kaizentro Build and Package**.
-3. Open the latest successful workflow run.
-4. Download the artifact named **Kaizentro-Build001-win-x64**.
-5. Extract the ZIP file on a Windows x64 machine.
-6. Run `Kaizentro.exe`.
-
-This is an early alpha package. It is not an MSI installer yet. The MSI/MSIX installer workstream is planned after the Excel import, database wiring, and generated VSM screen are stable.
+- SQL Server starter schema with import tracking tables
+- Unit tests for VSM logic, import parsing, and diagram generation
+- GitHub Actions build and downloadable Windows package workflow
 
 ## Repository Structure
 
@@ -60,11 +48,15 @@ database/
 
 docs/
   ARCHITECTURE.md
+  IMPORTS.md
   ROADMAP.md
   DOWNLOADS.md
 
 installer/
   README.md
+
+samples/
+  sap-routing-export.csv
 ```
 
 ## Build Target
@@ -72,10 +64,23 @@ installer/
 - Windows desktop application
 - .NET 8 / WPF foundation
 - SQL Server-ready data model
-- Self-contained Windows x64 ZIP artifact from GitHub Actions
+- Windows x64 self-contained downloadable artifact
+
+## Downloading the Alpha Package
+
+1. Open the **Actions** tab in GitHub.
+2. Select **Kaizentro Build and Package**.
+3. Open the latest successful run.
+4. Download **Kaizentro-Build002-win-x64** from artifacts.
+5. Extract the ZIP.
+6. Run `Kaizentro.exe`.
+
+## Importing sample data
+
+Use `samples/sap-routing-export.csv` to test the Build 002 import workflow.
 
 ## Status
 
-Current release state: **0.0.1-alpha / Build 001**
+Current release state: **0.0.2-alpha / Build 002**
 
-This is the starting scaffold, not the finished commercial package. Next build should add Excel import, persistent database wiring, and the first generated current-state VSM screen.
+This is still an early alpha, not the finished commercial package. Build 003 should add persistent SQL save/load, project files, native Excel import, and a cleaner generated VSM layout.
