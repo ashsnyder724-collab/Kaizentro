@@ -1,0 +1,5 @@
+PartNumber,Description,ProductFamily,DailyDemand,AvailableMinutesPerDay,WorkCenterCode,WorkCenterName,Sequence,OperationName,CycleTimeSeconds,SetupTimeMinutes,QueueTimeMinutes,MoveTimeMinutes,Operators,YieldPercent
+MTR-56-ALPHA,56 Frame Motor Alpha,Motors,60,430,WC-100,Shell Press,10,Shell Press,68,22,120,10,1,99
+MTR-56-ALPHA,56 Frame Motor Alpha,Motors,60,430,WC-200,Winding,20,Winding,420,18,240,20,2,97.5
+MTR-56-ALPHA,56 Frame Motor Alpha,Motors,60,430,WC-300,Paint,30,Paint,95,64,480,40,1,98.5
+MTR-56-ALPHA,56 Frame Motor Alpha,Motors,60,430,WC-400,Final Assembly,40,Final Assembly,180,12,90,12,2,99.2
