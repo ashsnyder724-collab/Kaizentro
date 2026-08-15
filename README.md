@@ -66,11 +66,19 @@ samples/
 - SQL Server-ready data model
 - Windows x64 self-contained downloadable artifact
 
+## Latest Validated Package
+
+- Workflow run: `31907597403`
+- Artifact: `Kaizentro-Build002-win-x64`
+- Artifact ID: `9252791843`
+- Approximate size: 67.5 MB
+- Result: restore, build, tests, publish, and upload all passed
+
 ## Downloading the Alpha Package
 
 1. Open the **Actions** tab in GitHub.
 2. Select **Kaizentro Build and Package**.
-3. Open the latest successful run.
+3. Open workflow run `31907597403`.
 4. Download **Kaizentro-Build002-win-x64** from artifacts.
 5. Extract the ZIP.
 6. Run `Kaizentro.exe`.
