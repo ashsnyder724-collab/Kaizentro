@@ -30,6 +30,15 @@ CREATE TABLE Materials (
     ProductFamily NVARCHAR(100) NOT NULL
 );
 
+CREATE TABLE ProductionDemands (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    MaterialId UNIQUEIDENTIFIER NOT NULL,
+    DailyDemand INT NOT NULL,
+    AvailableProductionMinutesPerDay DECIMAL(18,2) NOT NULL,
+    EffectiveDate DATE NOT NULL DEFAULT CONVERT(date, SYSUTCDATETIME()),
+    CONSTRAINT FK_ProductionDemands_Materials FOREIGN KEY (MaterialId) REFERENCES Materials(Id)
+);
+
 CREATE TABLE RoutingOperations (
     Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
     Sequence INT NOT NULL,
@@ -44,6 +53,24 @@ CREATE TABLE RoutingOperations (
     YieldPercent DECIMAL(18,2) NOT NULL,
     CONSTRAINT FK_RoutingOperations_Materials FOREIGN KEY (MaterialId) REFERENCES Materials(Id),
     CONSTRAINT FK_RoutingOperations_WorkCenters FOREIGN KEY (WorkCenterId) REFERENCES WorkCenters(Id)
+);
+
+CREATE TABLE ImportBatches (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    SourceSystem NVARCHAR(100) NOT NULL,
+    FileName NVARCHAR(300) NOT NULL,
+    ImportedBy NVARCHAR(200) NULL,
+    ImportedAtUtc DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+    Status NVARCHAR(50) NOT NULL
+);
+
+CREATE TABLE ImportValidationIssues (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    ImportBatchId UNIQUEIDENTIFIER NOT NULL,
+    RowNumber INT NOT NULL,
+    FieldName NVARCHAR(100) NOT NULL,
+    Message NVARCHAR(1000) NOT NULL,
+    CONSTRAINT FK_ImportValidationIssues_ImportBatches FOREIGN KEY (ImportBatchId) REFERENCES ImportBatches(Id)
 );
 
 CREATE TABLE KaizenOpportunities (
