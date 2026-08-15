@@ -1,0 +1,29 @@
+name: Kaizentro Build
+
+on:
+  push:
+    branches: [ main, "agent/**" ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore Kaizentro.sln
+
+      - name: Build
+        run: dotnet build Kaizentro.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test Kaizentro.sln --configuration Release --no-build --verbosity normal

@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Company>Elite Industrial Solutions LLC</Company>
+    <Product>Kaizentro</Product>
+    <Version>0.0.1-alpha</Version>
+  </PropertyGroup>
+</Project>
