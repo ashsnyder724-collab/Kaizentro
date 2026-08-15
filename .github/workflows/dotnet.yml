@@ -1,13 +1,14 @@
-name: Kaizentro Build
+name: Kaizentro Build and Package
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main, "agent/**" ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  build:
+  build-package:
     runs-on: windows-latest
 
     steps:
@@ -27,3 +28,30 @@ jobs:
 
       - name: Test
         run: dotnet test Kaizentro.sln --configuration Release --no-build --verbosity normal
+
+      - name: Publish Windows Desktop Package
+        run: |
+          dotnet publish src/Kaizentro.Desktop/Kaizentro.Desktop.csproj `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:PublishReadyToRun=false `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -o artifacts/Kaizentro-win-x64
+          $metadata = @"
+          Kaizentro Enterprise
+          Build: 001 Alpha
+          Package: Windows x64 self-contained publish
+          Notes: This is an early alpha desktop build. It contains the dashboard shell and sample VSM / Kaizen calculation engine.
+          "@
+          Set-Content -Path artifacts/Kaizentro-win-x64/BUILD-INFO.txt -Value $metadata
+          Compress-Archive -Path artifacts/Kaizentro-win-x64/* -DestinationPath artifacts/Kaizentro-Build001-win-x64.zip -Force
+
+      - name: Upload Downloadable Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kaizentro-Build001-win-x64
+          path: artifacts/Kaizentro-Build001-win-x64.zip
+          if-no-files-found: error
+          retention-days: 30
