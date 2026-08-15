@@ -4,6 +4,15 @@
 
 Build 002 is packaged as a Windows x64 ZIP artifact produced by GitHub Actions.
 
+### Latest validated artifact
+
+- Workflow run: `31907597403`
+- Artifact: `Kaizentro-Build002-win-x64`
+- Artifact ID: `9252791843`
+- Approximate size: 67.5 MB
+- SHA-256 digest: `04a8c6fa7c0cc88de5a5f8b50f739b8d939e4f7d2f0c1ba83c127f9447d36191`
+- Expires: 2026-09-14 unless promoted to a formal GitHub Release asset
+
 ### What it includes
 
 - Kaizentro WPF desktop shell
@@ -20,7 +29,7 @@ Build 002 is packaged as a Windows x64 ZIP artifact produced by GitHub Actions.
 1. Open the repository in GitHub.
 2. Go to the **Actions** tab.
 3. Select **Kaizentro Build and Package**.
-4. Open the latest successful run.
+4. Open the successful run for workflow run `31907597403`.
 5. Download **Kaizentro-Build002-win-x64** from the run artifacts.
 6. Extract the ZIP file.
 7. Run `Kaizentro.exe`.
