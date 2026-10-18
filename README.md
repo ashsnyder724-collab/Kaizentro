@@ -92,3 +92,10 @@ Use `samples/sap-routing-export.csv` to test the Build 002 import workflow.
 Current release state: **0.0.2-alpha / Build 002**
 
 This is still an early alpha, not the finished commercial package. Build 003 should add persistent SQL save/load, project files, native Excel import, and a cleaner generated VSM layout.
+
+
+## Copyright and licensing
+
+Copyright © 2026 Elite Industrial Solutions LLC. All rights reserved. Original covered software is proprietary under [LICENSE](LICENSE). Customer use requires a separate written agreement. Third-party material retains its own licenses; see [third-party notices](THIRD_PARTY_NOTICES.md). Windows builds include the legal files in the `Legal` directory. A copyright notice is not a registration certificate.
+
+Review [SECURITY.md](SECURITY.md) before handling company or customer data.

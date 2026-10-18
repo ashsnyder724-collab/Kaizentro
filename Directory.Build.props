@@ -5,6 +5,8 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <Company>Elite Industrial Solutions LLC</Company>
     <Product>Kaizentro</Product>
+    <Copyright>Copyright © 2026 Elite Industrial Solutions LLC. All rights reserved.</Copyright>
     <Version>0.0.1-alpha</Version>
   </PropertyGroup>
 </Project>
+
