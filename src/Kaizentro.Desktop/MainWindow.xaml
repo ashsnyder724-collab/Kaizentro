@@ -24,6 +24,7 @@
                     <StackPanel>
                         <TextBlock Text="Build 002" Foreground="White" FontWeight="Bold" />
                         <TextBlock Text="CSV import + generated VSM" Foreground="#D6E7FF" TextWrapping="Wrap" />
+                        <TextBlock Text="© 2026 Elite Industrial Solutions LLC. All rights reserved." Foreground="#D6E7FF" FontSize="11" TextWrapping="Wrap" Margin="0,12,0,0" />
                     </StackPanel>
                 </Border>
             </StackPanel>
@@ -77,3 +78,4 @@
         </ScrollViewer>
     </Grid>
 </Window>
+

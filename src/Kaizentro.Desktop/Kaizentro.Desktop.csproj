@@ -9,4 +9,10 @@
     <ProjectReference Include="..\Kaizentro.Application\Kaizentro.Application.csproj" />
     <ProjectReference Include="..\Kaizentro.Domain\Kaizentro.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE" Link="Legal\LICENSE" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="..\..\NOTICE" Link="Legal\NOTICE" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="..\..\THIRD_PARTY_NOTICES.md" Link="Legal\THIRD_PARTY_NOTICES.md" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
+
