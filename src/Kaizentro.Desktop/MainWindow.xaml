@@ -73,9 +73,15 @@
                 <ListView x:Name="ProcessList" Height="190" Background="White" />
 
                 <TextBlock Text="Top AI Kaizen Opportunities" FontSize="22" FontWeight="Bold" Margin="0,24,0,12" />
+                <WrapPanel Margin="0,0,0,8">
+                    <Button Content="Export savings input template" Click="ExportSavingsTemplate_Click" Padding="10,6" Margin="0,0,8,0" />
+                    <Button Content="Load documented savings inputs" Click="LoadSavingsInputs_Click" Padding="10,6" />
+                </WrapPanel>
+                <TextBlock Text="Projected scenarios may overlap. Labor capacity and throughput contribution are not verified cash savings." TextWrapping="Wrap" Margin="0,0,0,8" />
                 <ListView x:Name="OpportunityList" Height="220" Background="White" />
             </StackPanel>
         </ScrollViewer>
     </Grid>
 </Window>
+
 

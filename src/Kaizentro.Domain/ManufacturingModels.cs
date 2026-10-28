@@ -62,5 +62,9 @@ public sealed record KaizenOpportunity(
     string WasteType,
     string ProblemStatement,
     string Recommendation,
-    decimal EstimatedAnnualSavings,
-    int PriorityScore);
+    decimal? EstimatedAnnualSavings,
+    int PriorityScore)
+{
+    public SavingsAssessment? Savings { get; init; }
+}
+

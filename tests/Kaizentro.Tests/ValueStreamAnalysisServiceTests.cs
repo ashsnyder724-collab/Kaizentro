@@ -24,8 +24,14 @@ public sealed class ValueStreamAnalysisServiceTests
             new Dictionary<Guid, WorkCenter> { [workCenter.Id] = workCenter },
             routing);
 
+        Assert.All(map.Opportunities, opportunity => {
+            Assert.Null(opportunity.EstimatedAnnualSavings);
+            Assert.Equal("Unquantified", opportunity.Savings!.ProjectionKind);
+            Assert.Null(opportunity.Savings.VerifiedRealized);
+        });
         Assert.True(map.Processes.Single().IsBottleneck);
         Assert.Contains(map.Opportunities, opportunity => opportunity.WasteType.Contains("Constraint"));
         Assert.Contains(map.Opportunities, opportunity => opportunity.WasteType.Contains("Changeover"));
     }
 }
+

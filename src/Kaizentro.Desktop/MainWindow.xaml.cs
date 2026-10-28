@@ -1,4 +1,6 @@
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -16,6 +18,16 @@ public partial class MainWindow : Window
     private readonly ValueStreamAnalysisService _analysisService = new();
     private readonly ValueStreamDiagramService _diagramService = new();
     private readonly RoutingCsvImporter _importer = new();
+
+    private Material? _material;
+    private ProductionDemand? _demand;
+    private IReadOnlyDictionary<Guid, WorkCenter>? _workCenters;
+    private IReadOnlyList<RoutingOperation>? _routing;
+    private static readonly JsonSerializerOptions SavingsJson = new()
+    {
+        WriteIndented = true, UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     public MainWindow()
     {
@@ -42,6 +54,7 @@ public partial class MainWindow : Window
         };
 
         var demand = new ProductionDemand(material.Id, 60, 430m);
+        RememberRouting(material, demand, workCenters, routing);
         var map = _analysisService.BuildCurrentState(material, demand, workCenters, routing);
         LoadMap(map, "Sample 56-frame routing loaded. Import a CSV export to replace it.");
     }
@@ -69,6 +82,7 @@ public partial class MainWindow : Window
                 return;
             }
 
+            RememberRouting(import.Material, import.Demand, import.WorkCenters, import.Operations);
             var map = _analysisService.BuildCurrentState(import.Material, import.Demand, import.WorkCenters, import.Operations);
             var issueText = import.HasIssues
                 ? $" Loaded with {import.Issues.Count} validation note(s). First: {import.Issues[0].Message}"
@@ -97,9 +111,59 @@ public partial class MainWindow : Window
             $"{process.Sequence} | {process.WorkCenterCode} | {process.OperationName} | CT {process.CycleTimeSeconds:N0}s | Setup {process.SetupTimeMinutes:N0}m | Queue {process.QueueTimeMinutes:N0}m | Bottleneck: {(process.IsBottleneck ? "YES" : "No")}");
 
         OpportunityList.ItemsSource = map.Opportunities.Select(opportunity =>
-            $"[{opportunity.PriorityScore}] {opportunity.Area} - {opportunity.WasteType}: {opportunity.Recommendation} Est. ${opportunity.EstimatedAnnualSavings:N0}/yr");
+            $"[{opportunity.PriorityScore}] {opportunity.Area} - {opportunity.WasteType}: {opportunity.Recommendation} {FormatSavings(opportunity.Savings)}");
 
         DrawValueStream(diagram);
+    }
+
+    private void RememberRouting(Material material, ProductionDemand demand,
+        IReadOnlyDictionary<Guid, WorkCenter> centers, IReadOnlyList<RoutingOperation> routing)
+    {
+        _material = material; _demand = demand; _workCenters = centers; _routing = routing;
+    }
+
+    private static string FormatSavings(SavingsAssessment? savings)
+    {
+        if (savings is null) return "Unquantified";
+        var projected = savings.ProjectedAnnualAmount is { } amount
+            ? $"{savings.ProjectionKind}: {savings.Currency} {amount:N2}/year"
+            : $"Unquantified: {savings.Explanation}";
+        var actual = savings.VerifiedRealized is { } realized
+            ? $" | Verified realized: {savings.Currency} {realized.Amount:N2}, {realized.PeriodStart}–{realized.PeriodEnd}, verifier {realized.VerifiedBy}, evidence {realized.EvidenceReference}"
+            : " | Realized: unverified";
+        return $"{projected}{actual} | Input evidence: {savings.Assumptions?.EvidenceReference} | {savings.Formula}";
+    }
+
+    private void ExportSavingsTemplate_Click(object sender, RoutedEventArgs e)
+    {
+        if (_material is null || _routing is null || _workCenters is null || _demand is null) return;
+        var dialog = new SaveFileDialog { Filter = "JSON files (*.json)|*.json", FileName = "savings-inputs.json" };
+        if (dialog.ShowDialog(this) != true) return;
+        try
+        {
+            var entries = _routing.SelectMany(operation =>
+                _analysisService.BuildCurrentState(_material, _demand, _workCenters, new[] { operation }).Opportunities
+                .Select(opportunity => new SavingsInput { MaterialId = _material.Id,
+                    OperationSequence = operation.Sequence, WasteType = opportunity.WasteType }));
+            File.WriteAllText(dialog.FileName, JsonSerializer.Serialize(entries, SavingsJson));
+            ImportStatusText.Text = "Template exported. Complete currency, evidence and selected formula inputs; remove unused scenarios. See docs/SAVINGS.md.";
+        }
+        catch (Exception ex) { ImportStatusText.Text = $"Export failed: {ex.Message}"; }
+    }
+
+    private void LoadSavingsInputs_Click(object sender, RoutedEventArgs e)
+    {
+        if (_material is null || _routing is null || _workCenters is null || _demand is null) return;
+        var dialog = new OpenFileDialog { Filter = "JSON files (*.json)|*.json", CheckFileExists = true };
+        if (dialog.ShowDialog(this) != true) return;
+        try
+        {
+            var inputs = JsonSerializer.Deserialize<List<SavingsInput>>(File.ReadAllText(dialog.FileName), SavingsJson)
+                ?? throw new ArgumentException("Savings file must contain an array.");
+            var map = _analysisService.BuildCurrentState(_material, _demand, _workCenters, _routing, inputs);
+            LoadMap(map, "Documented savings inputs applied. Scenarios may overlap; do not add them together. Input file is the audit record.");
+        }
+        catch (Exception ex) { ImportStatusText.Text = $"Savings inputs rejected: {ex.Message}"; }
     }
 
     private void DrawValueStream(ValueStreamDiagram diagram)
@@ -208,3 +272,4 @@ public partial class MainWindow : Window
         ValueStreamCanvas.Children.Add(label);
     }
 }
+
